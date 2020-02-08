@@ -21,10 +21,11 @@ export class DockerodeClientFactory implements DockerClientFactory {
       const { host, client } = this.fromDockerHost(process.env.DOCKER_HOST);
       this.host = host;
       this.client = client;
+    } else if (process.env.CODEBUILD_CI) {
+      const { host, client } = this.fromDefaults();
+      this.host = host;
+      this.client = client;
     } else if (fs.existsSync("/.dockerenv")) {
-      const contents = fs.readFileSync('/.dockerenv', 'utf8');
-      console.log('ENV: ', process.env);
-      console.log('DOCKERENV CONTENT: ', contents);
       const { host, client } = this.fromDockerWormhole();
       this.host = host;
       this.client = client;
